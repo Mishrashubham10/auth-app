@@ -8,6 +8,7 @@ const PORT = process.env.PORT || 8800;
 
 const authRoute = require('./routes/authRoute');
 const connectDB = require('./config/db');
+const verifyToken = require('./config/verify');
 
 // DB Connection
 connectDB();

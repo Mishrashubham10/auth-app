@@ -17,13 +17,10 @@ const Login = () => {
       },
       body: JSON.stringify({ username, password }),
     });
-    
     const data = await res.json();
     console.log(data);
     navigate('/');
   };
-
-  handleSubmit();
 
   return (
     <form className="login" onSubmit={handleSubmit}>

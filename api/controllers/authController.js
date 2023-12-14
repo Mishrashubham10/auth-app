@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
 const asyncHandler = require('express-async-handler');
+const jwt = require('jsonwebtoken');
 
 // Register
 const register = asyncHandler(async (req, res) => {
@@ -21,9 +22,21 @@ const register = asyncHandler(async (req, res) => {
 
   const user = await User.create(userObj);
 
+  // JWT
+  const accessToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+    expiresIn: '15m',
+  });
+  const refreshToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+    expiresIn: '7d',
+  });
+  res.cookie('token', refreshToken, {
+    httpOnly: true,
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+  });
+
   if (!user) return res.status(500).json({ message: 'Something went wrong' });
 
-  res.status(201).json(user);
+  res.status(201).json({ accessToken });
 });
 
 // Login
@@ -41,22 +54,25 @@ const login = asyncHandler(async (req, res) => {
   //   Match passwords of the users
   const match = await bcrypt.compare(password, user.password);
 
-  if (!match) return res.status(403).json({ message: 'Invalid credentials' })
+  if (!match) return res.status(403).json({ message: 'Invalid credentials' });
 
-  res.status(200).json(`User with name of ${username} logged in`);
+  const accessToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+  const refreshToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+    expiresIn: '15m',
+  });
+  res.cookie('token', refreshToken, { httpOnly: true, maxAge: 3 * 30 * 30 * 60 });
+
+  res.status(200).json({ accessToken });
 });
 
-// Logout
-const logout = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-
-  if (!id) return res.status(404).json({ message: 'Id is required!' });
-
-  const user = await User.findByIdAndDelete(id);
-
-  if (!user) return res.status(500).json({ message: 'User not found' });
-
-  res.status(200).json({ message: 'User deleted' });
-});
+// @desc Logout
+// @route POST /auth/logout
+// @access Public - just to clear cookie if exists
+const logout = (req, res) => {
+  const cookies = req.cookies;
+  if (!cookies?.jwt) return res.status(204);
+  res.clearCookie('jwt', { httpOnly: true });
+  res.json({ message: 'Cookie cleared' });
+};
 
 module.exports = { register, login, logout };
