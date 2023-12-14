@@ -1,23 +1,38 @@
 import { useState } from 'react';
 import './login.css';
+import { useNavigate } from 'react-router-dom';
 
-const Register = () => {
+const Login = () => {
+  const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const submitHandler = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-  }
+
+    const res = await fetch('http://localhost:8800/api/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ username, password }),
+    });
+    
+    const data = await res.json();
+    console.log(data);
+    navigate('/');
+  };
+
+  handleSubmit();
 
   return (
-    <form className="login" onSubmit={submitHandler}>
+    <form className="login" onSubmit={handleSubmit}>
       <h1>Login with Us</h1>
       <label htmlFor="username">Username</label>
       <input
         type="text"
         placeholder="username..."
         onChange={(e) => setUsername(e.target.value)}
-        value={username}
       />
       <label htmlFor="password">Password</label>
       <input
@@ -26,9 +41,9 @@ const Register = () => {
         onChange={(e) => setPassword(e.target.value)}
         value={password}
       />
-      <button>Login</button>
+      <button type="submit">Login</button>
     </form>
   );
 };
 
-export default Register;
+export default Login;
