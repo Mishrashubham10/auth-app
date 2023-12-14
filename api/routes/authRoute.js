@@ -1,16 +1,9 @@
 const express = require('express');
 const router = express.Router();
+const { register, login, logout } = require('../controllers/authController');
 
-router.post('/register', (req, res) => {
-    res.send('Youre registered in successfully');
-})
-
-router.post('/login', (req, res) => {
-    res.send('Youre logged in successfully');
-})
-
-router.get('/logout', (req, res) => {
-    res.send('Youre logged out successfully');
-})
+router.post('/register', register);
+router.post('/login', login);
+router.post('/logout', logout);
 
 module.exports = router;
