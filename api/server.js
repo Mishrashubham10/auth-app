@@ -6,6 +6,10 @@ const app = express();
 const PORT = process.env.PORT || 8800;
 
 const authRoute = require('./routes/authRoute');
+const connectDB = require('./config/db');
+
+// DB Connection
+connectDB();
 
 // middleware
 app.use(cookieParser());
