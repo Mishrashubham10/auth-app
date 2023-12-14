@@ -1,0 +1,34 @@
+.navbar {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.navContainer {
+    width: 80%;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 0;
+}
+
+.heading {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.navItems {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.navItem {
+    font-weight: 300;
+    font-size: 0.9rem;
+}
+
+.navItem:hover {
+    text-decoration: underline #29ADB2;
+}

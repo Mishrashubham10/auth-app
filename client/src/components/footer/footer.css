@@ -1,0 +1,25 @@
+.footer {
+    padding: 0.7rem;
+    display: flex;
+    align-items: center;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    width: 80%;
+    margin: 0 auto;
+    justify-content: space-between;
+    padding: 2rem 0;
+}
+
+.text {
+    font-size: 0.8rem;
+    color: #555;
+}
+
+.icons {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
